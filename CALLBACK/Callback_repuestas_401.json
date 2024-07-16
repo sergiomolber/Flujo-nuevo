@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "7d6a0ce5-a722-45e9-816e-186378d1a74b",
-		"name": "Transfiya Copy 2",
+		"_postman_id": "777228ea-9991-4554-8b24-642d64f70740",
+		"name": "Erroes 401",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "29460625",
-		"_collection_link": "https://red-satellite-829132.postman.co/workspace/Transfiya-flujo-de-fallos~a9f67874-ef94-4331-b5a2-d649a940338c/collection/29460625-7d6a0ce5-a722-45e9-816e-186378d1a74b?source=collection_link"
+		"_collection_link": "https://red-satellite-829132.postman.co/workspace/management-y-callback~d08a5d98-1202-4665-bc34-d17d16210771/collection/29460625-777228ea-9991-4554-8b24-642d64f70740?action=share&source=collection_link&creator=29460625"
 	},
 	"item": [
 		{
@@ -56,21 +56,11 @@
 					}
 				},
 				"url": {
-					"raw": "https://business.transfiya.com.co/ext/prb/ext/transfiya/v1/transfers/zPSaK3TzhqfPMitnm/callback",
-					"protocol": "https",
+					"raw": "{{base-url}}/zPSaK3TzhqfPMitnm/callback",
 					"host": [
-						"business",
-						"transfiya",
-						"com",
-						"co"
+						"{{base-url}}"
 					],
 					"path": [
-						"ext",
-						"prb",
-						"ext",
-						"transfiya",
-						"v1",
-						"transfers",
 						"zPSaK3TzhqfPMitnm",
 						"callback"
 					]

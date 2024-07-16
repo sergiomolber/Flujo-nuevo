@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "b35eb0b9-464a-4b5d-9045-2790beb00349",
-		"name": "Transfiya Copy",
+		"_postman_id": "61e0d01d-17c8-43e7-9422-8c6098cfe981",
+		"name": "Transfiya CALLBACK codigos 200",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "29460625",
-		"_collection_link": "https://red-satellite-829132.postman.co/workspace/a9f67874-ef94-4331-b5a2-d649a940338c/collection/29460625-b35eb0b9-464a-4b5d-9045-2790beb00349?action=share&source=collection_link&creator=29460625"
+		"_collection_link": "https://red-satellite-829132.postman.co/workspace/management-y-callback~d08a5d98-1202-4665-bc34-d17d16210771/collection/29460625-61e0d01d-17c8-43e7-9422-8c6098cfe981?action=share&source=collection_link&creator=29460625"
 	},
 	"item": [
 		{
@@ -55,21 +55,11 @@
 					}
 				},
 				"url": {
-					"raw": "https://business.transfiya.com.co/ext/prb/ext/transfiya/v1/transfers/zPSaK3TzhqfPMitnm/callback",
-					"protocol": "https",
+					"raw": "{{base-url}}/zPSaK3TzhqfPMitnm/callback",
 					"host": [
-						"business",
-						"transfiya",
-						"com",
-						"co"
+						"{{base-url}}"
 					],
 					"path": [
-						"ext",
-						"prb",
-						"ext",
-						"transfiya",
-						"v1",
-						"transfers",
 						"zPSaK3TzhqfPMitnm",
 						"callback"
 					]
