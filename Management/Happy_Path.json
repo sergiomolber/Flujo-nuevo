@@ -65,20 +65,11 @@
 					}
 				},
 				"url": {
-					"raw": "https://business.transfiya.com.co/ext/prb/ext/transfiya/v1/packages",
-					"protocol": "https",
+					"raw": "{{base-url}}/packages",
 					"host": [
-						"business",
-						"transfiya",
-						"com",
-						"co"
+						"{{base-url}}"
 					],
 					"path": [
-						"ext",
-						"prb",
-						"ext",
-						"transfiya",
-						"v1",
 						"packages"
 					]
 				}
