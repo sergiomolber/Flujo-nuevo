@@ -1,0 +1,15 @@
+{
+	"id": "415f4192-97e5-473e-8a16-1c8eb9125220",
+	"values": [
+		{
+			"key": "base-url",
+			"value": "https://business.transfiya.com.co/ext/prb",
+			"type": "default",
+			"enabled": true
+		}
+	],
+	"name": "Globals",
+	"_postman_variable_scope": "globals",
+	"_postman_exported_at": "2024-07-15T21:50:17.648Z",
+	"_postman_exported_using": "Postman/11.3.0"
+}

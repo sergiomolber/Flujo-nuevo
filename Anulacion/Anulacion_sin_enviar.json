@@ -1,0 +1,289 @@
+{
+	"info": {
+		"_postman_id": "0e8caf04-d59b-441f-b512-ad8bd1bba1a3",
+		"name": "Anulacion sin enviar",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "34404218"
+	},
+	"item": [
+		{
+			"name": "sin enviar apikey",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "api-key",
+						"value": "f494c2f3-2e29-4766-b706-ec9313470472",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "client-id",
+						"value": "236dfe767d6e6fa613058cc5cf5afe04",
+						"type": "text"
+					},
+					{
+						"key": "client-secret",
+						"value": "14f9f06fe6f5a995651f54bb9ec51371",
+						"type": "text"
+					},
+					{
+						"key": "message-uid",
+						"value": "{{$guid}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{base-url}}/transfer/JCxzMYbp3kWLMFXF7/reject",
+					"host": [
+						"{{base-url}}"
+					],
+					"path": [
+						"transfer",
+						"JCxzMYbp3kWLMFXF7",
+						"reject"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "sin enviar clientid",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "api-key",
+						"value": "f494c2f3-2e29-4766-b706-ec9313470472",
+						"type": "text"
+					},
+					{
+						"key": "client-id",
+						"value": "236dfe767d6e6fa613058cc5cf5afe04",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "client-secret",
+						"value": "14f9f06fe6f5a995651f54bb9ec51371",
+						"type": "text"
+					},
+					{
+						"key": "message-uid",
+						"value": "{{$guid}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{base-url}}/transfer/JCxzMYbp3kWLMFXF7/reject",
+					"host": [
+						"{{base-url}}"
+					],
+					"path": [
+						"transfer",
+						"JCxzMYbp3kWLMFXF7",
+						"reject"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "sin enviar clientsecret",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "api-key",
+						"value": "f494c2f3-2e29-4766-b706-ec9313470472",
+						"type": "text"
+					},
+					{
+						"key": "client-id",
+						"value": "236dfe767d6e6fa613058cc5cf5afe04",
+						"type": "text"
+					},
+					{
+						"key": "client-secret",
+						"value": "14f9f06fe6f5a995651f54bb9ec51371",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "message-uid",
+						"value": "{{$guid}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{base-url}}/transfer/JCxzMYbp3kWLMFXF7/reject",
+					"host": [
+						"{{base-url}}"
+					],
+					"path": [
+						"transfer",
+						"JCxzMYbp3kWLMFXF7",
+						"reject"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "sin enviar messageuid",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "api-key",
+						"value": "f494c2f3-2e29-4766-b706-ec9313470472",
+						"type": "text"
+					},
+					{
+						"key": "client-id",
+						"value": "236dfe767d6e6fa613058cc5cf5afe04",
+						"type": "text"
+					},
+					{
+						"key": "client-secret",
+						"value": "14f9f06fe6f5a995651f54bb9ec51371",
+						"type": "text"
+					},
+					{
+						"key": "message-uid",
+						"value": "{{$guid}}",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "{{base-url}}/transfer/JCxzMYbp3kWLMFXF7/reject",
+					"host": [
+						"{{base-url}}"
+					],
+					"path": [
+						"transfer",
+						"JCxzMYbp3kWLMFXF7",
+						"reject"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "sin enviar transferId",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {\r",
+							"    pm.response.to.have.status(404);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "api-key",
+						"value": "f494c2f3-2e29-4766-b706-ec9313470472",
+						"type": "text"
+					},
+					{
+						"key": "client-id",
+						"value": "236dfe767d6e6fa613058cc5cf5afe04",
+						"type": "text"
+					},
+					{
+						"key": "client-secret",
+						"value": "14f9f06fe6f5a995651f54bb9ec51371",
+						"type": "text"
+					},
+					{
+						"key": "message-uid",
+						"value": "{{$guid}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{base-url}}/transfer//reject",
+					"host": [
+						"{{base-url}}"
+					],
+					"path": [
+						"transfer",
+						"",
+						"reject"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
