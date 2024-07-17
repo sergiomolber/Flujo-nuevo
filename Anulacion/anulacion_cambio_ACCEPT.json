@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "3bfa816d-5ffe-41bf-ac1d-4dfaf7a3f40a",
+		"_postman_id": "51837654-96d8-48a9-bfcf-bf7e9bee1076",
 		"name": "anulacion cambio ACCEPT",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "29460625",
-		"_collection_link": "https://red-satellite-829132.postman.co/workspace/despligue~0c0382d0-860b-453c-b5e0-2c1221e3d10a/collection/29460625-3bfa816d-5ffe-41bf-ac1d-4dfaf7a3f40a?action=share&source=collection_link&creator=29460625"
+		"_collection_link": "https://red-satellite-829132.postman.co/workspace/despligue~0c0382d0-860b-453c-b5e0-2c1221e3d10a/collection/29460625-51837654-96d8-48a9-bfcf-bf7e9bee1076?action=share&source=collection_link&creator=29460625"
 	},
 	"item": [
 		{
@@ -451,11 +451,20 @@
 					}
 				},
 				"url": {
-					"raw": "{{base-url}}/transfers/{{txRef}}/callback",
+					"raw": "https://business.transfiya.com.co/ext/prb/ext/transfiya/v1/transfers/{{txRef}}/callback",
+					"protocol": "https",
 					"host": [
-						"{{base-url}}"
+						"business",
+						"transfiya",
+						"com",
+						"co"
 					],
 					"path": [
+						"ext",
+						"prb",
+						"ext",
+						"transfiya",
+						"v1",
 						"transfers",
 						"{{txRef}}",
 						"callback"

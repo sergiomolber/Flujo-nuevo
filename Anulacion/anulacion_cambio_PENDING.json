@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "ade82b4b-af85-4fd8-8e73-f830092d972c",
+		"_postman_id": "ce25b13a-1a6f-48cf-bdf8-d9c84a44edf3",
 		"name": "anulacion cambio PENDING",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "29460625",
-		"_collection_link": "https://red-satellite-829132.postman.co/workspace/despligue~0c0382d0-860b-453c-b5e0-2c1221e3d10a/collection/29460625-ade82b4b-af85-4fd8-8e73-f830092d972c?action=share&source=collection_link&creator=29460625"
+		"_collection_link": "https://red-satellite-829132.postman.co/workspace/despligue~0c0382d0-860b-453c-b5e0-2c1221e3d10a/collection/29460625-ce25b13a-1a6f-48cf-bdf8-d9c84a44edf3?action=share&source=collection_link&creator=29460625"
 	},
 	"item": [
 		{
@@ -451,11 +451,20 @@
 					}
 				},
 				"url": {
-					"raw": "{{base-url}}/transfers/{{txRef}}/callback",
+					"raw": "https://business.transfiya.com.co/ext/prb/ext/transfiya/v1/transfers/{{txRef}}/callback",
+					"protocol": "https",
 					"host": [
-						"{{base-url}}"
+						"business",
+						"transfiya",
+						"com",
+						"co"
 					],
 					"path": [
+						"ext",
+						"prb",
+						"ext",
+						"transfiya",
+						"v1",
 						"transfers",
 						"{{txRef}}",
 						"callback"
@@ -517,11 +526,20 @@
 					}
 				],
 				"url": {
-					"raw": "{{base-url}}/transfer/{{transferId}}/reject",
+					"raw": "https://business.transfiya.com.co/ext/prb/ext/transfiya/v1/transfer/{{transferId}}/reject",
+					"protocol": "https",
 					"host": [
-						"{{base-url}}"
+						"business",
+						"transfiya",
+						"com",
+						"co"
 					],
 					"path": [
+						"ext",
+						"prb",
+						"ext",
+						"transfiya",
+						"v1",
 						"transfer",
 						"{{transferId}}",
 						"reject"
