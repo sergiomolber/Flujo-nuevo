@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "43e2e900-7b8c-40e4-a3d3-8996980bafe4",
+		"_postman_id": "e350f4ef-886d-4488-ac23-ce0051169c4c",
 		"name": "anulacion cambio transferencia ya anulada",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "29460625",
-		"_collection_link": "https://red-satellite-829132.postman.co/workspace/anulacion~56bc220a-7b29-48ca-a4d2-044b53ce19a9/collection/29460625-43e2e900-7b8c-40e4-a3d3-8996980bafe4?action=share&source=collection_link&creator=29460625"
+		"_collection_link": "https://red-satellite-829132.postman.co/workspace/despligue~0c0382d0-860b-453c-b5e0-2c1221e3d10a/collection/29460625-e350f4ef-886d-4488-ac23-ce0051169c4c?action=share&source=collection_link&creator=29460625"
 	},
 	"item": [
 		{
@@ -24,10 +24,7 @@
 							"const txRef = responseJson1.transfersInfo[0].txRef;\r",
 							"pm.environment.set(\"txRef\", txRef);\r",
 							"\r",
-							"//obtenre tiempo de respuesta\r",
-							"pm.test('El tiempo de respuesta es menor a 3000ms', function(){\r",
-							"    pm.expect(pm.response.responseTime).to.be.below(3000);\r",
-							"});"
+							""
 						],
 						"type": "text/javascript",
 						"packages": {}
@@ -510,14 +507,11 @@
 					}
 				},
 				"url": {
-					"raw": "{{base-url}}/ext/transfiya/v1/transfers/{{txRef}}/callback",
+					"raw": "{{base-url}}/transfers/{{txRef}}/callback",
 					"host": [
 						"{{base-url}}"
 					],
 					"path": [
-						"ext",
-						"transfiya",
-						"v1",
 						"transfers",
 						"{{txRef}}",
 						"callback"

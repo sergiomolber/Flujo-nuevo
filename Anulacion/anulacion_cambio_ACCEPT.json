@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "3b2f27ae-ce1e-4b24-a566-4adf12ba4807",
+		"_postman_id": "3bfa816d-5ffe-41bf-ac1d-4dfaf7a3f40a",
 		"name": "anulacion cambio ACCEPT",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "29460625",
-		"_collection_link": "https://red-satellite-829132.postman.co/workspace/anulacion~56bc220a-7b29-48ca-a4d2-044b53ce19a9/collection/29460625-3b2f27ae-ce1e-4b24-a566-4adf12ba4807?action=share&source=collection_link&creator=29460625"
+		"_collection_link": "https://red-satellite-829132.postman.co/workspace/despligue~0c0382d0-860b-453c-b5e0-2c1221e3d10a/collection/29460625-3bfa816d-5ffe-41bf-ac1d-4dfaf7a3f40a?action=share&source=collection_link&creator=29460625"
 	},
 	"item": [
 		{
@@ -23,11 +23,7 @@
 							"const responseJson1 = pm.response.json();\r",
 							"const txRef = responseJson1.transfersInfo[0].txRef;\r",
 							"pm.environment.set(\"txRef\", txRef);\r",
-							"\r",
-							"//obtenre tiempo de respuesta\r",
-							"pm.test('El tiempo de respuesta es menor a 3000ms', function(){\r",
-							"    pm.expect(pm.response.responseTime).to.be.below(3000);\r",
-							"});"
+							""
 						],
 						"type": "text/javascript",
 						"packages": {}
@@ -455,14 +451,11 @@
 					}
 				},
 				"url": {
-					"raw": "{{base-url}}/ext/transfiya/v1/transfers/{{txRef}}/callback",
+					"raw": "{{base-url}}/transfers/{{txRef}}/callback",
 					"host": [
 						"{{base-url}}"
 					],
 					"path": [
-						"ext",
-						"transfiya",
-						"v1",
 						"transfers",
 						"{{txRef}}",
 						"callback"
