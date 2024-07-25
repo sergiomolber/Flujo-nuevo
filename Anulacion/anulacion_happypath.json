@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "a75f975f-9b76-40e6-bcb8-1f938d666bda",
+		"_postman_id": "cca8168b-6357-4be1-8b72-b3445c919b90",
 		"name": "anulacion happypath",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "29460625",
-		"_collection_link": "https://red-satellite-829132.postman.co/workspace/Federado-nuevo~be46dd53-09bf-4d08-9158-34941a6d4d79/collection/29460625-a75f975f-9b76-40e6-bcb8-1f938d666bda?action=share&source=collection_link&creator=29460625"
+		"_collection_link": "https://red-satellite-829132.postman.co/workspace/REVSION~ba7964fb-204b-4948-bcbe-87d38bf9cfbc/collection/29460625-cca8168b-6357-4be1-8b72-b3445c919b90?action=share&source=collection_link&creator=29460625"
 	},
 	"item": [
 		{
@@ -466,7 +466,9 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							""
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
 						],
 						"type": "text/javascript",
 						"packages": {}
@@ -507,14 +509,11 @@
 					}
 				},
 				"url": {
-					"raw": "{{base-url}}/ext/transfiya/v1/transfers/{{txRef}}/callback",
+					"raw": "{{base-url}}/transfers/{{txRef}}/callback",
 					"host": [
 						"{{base-url}}"
 					],
 					"path": [
-						"ext",
-						"transfiya",
-						"v1",
 						"transfers",
 						"{{txRef}}",
 						"callback"
