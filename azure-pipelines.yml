@@ -13,6 +13,10 @@ steps:
 - checkout: self
   displayName: 'Checkout repository'
 
+- script: |
+    echo "Listing files in the directory:"
+    dir /s
+  displayName: 'List Files in Directory'
 
 
 - script: |
