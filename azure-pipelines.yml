@@ -24,43 +24,26 @@ steps:
 
 
 - script: |
-    echo {
-      "name": "Callback",
-      "type": "jenkins",
-      "reportName": "Allure Report"
-    } > callback\allure-results\executor.json
+    mkdir callback\allure-results
+    echo {\"name\":\"Callback\",\"type\":\"jenkins\",\"reportName\":\"Allure Report\"} > callback\allure-results\executor.json
   displayName: 'Setup Callback'
 
 - script: |
-    echo {
-      "name": "Management",
-      "type": "jenkins",
-      "reportName": "Allure Report"
-    } > management\allure-results\executor.json
+    mkdir management\allure-results
+    echo {\"name\":\"Management\",\"type\":\"jenkins\",\"reportName\":\"Allure Report\"} > management\allure-results\executor.json
   displayName: 'Setup Management'
 
 - script: |
-    echo {
-      "name": "Anulacion",
-      "type": "jenkins",
-      "reportName": "Allure Report"
-    } > anulacion\allure-results\executor.json
+    mkdir anulacion\allure-results
+    echo {\"name\":\"Anulacion\",\"type\":\"jenkins\",\"reportName\":\"Allure Report\"} > anulacion\allure-results\executor.json
   displayName: 'Setup Anulacion'
 
 - script: |
-    echo {
-      "Operating System": "Windows",
-      "IDE": "Newman y callbackman",
-      "Environment": "CALLBACK"
-    } > callback\allure-results\environment.json
+    echo {\"Operating System\":\"Windows\",\"IDE\":\"Newman y callbackman\",\"Environment\":\"CALLBACK\"} > callback\allure-results\environment.json
   displayName: 'Create Environment File Callback'
 
 - script: |
-    echo {
-      "Operating System": "Windows",
-      "IDE": "Newman y callbackman",
-      "Environment": "MANAGEMENT"
-    } > management\allure-results\environment.json
+    echo {\"Operating System\":\"Windows\",\"IDE\":\"Newman y callbackman\",\"Environment\":\"MANAGEMENT\"} > management\allure-results\environment.json
   displayName: 'Create Environment File Management'
 
 - script: |
