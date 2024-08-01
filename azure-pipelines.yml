@@ -21,11 +21,7 @@ steps:
 - checkout: self
   displayName: 'Checkout repository'
 
-- script: |
-    rmdir /S /Q callback\allure-results
-    rmdir /S /Q management\allure-results
-    rmdir /S /Q anulacion\allure-results
-  displayName: 'Clean environments'
+
 
 - script: |
     echo {
