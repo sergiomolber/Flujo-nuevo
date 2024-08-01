@@ -46,39 +46,48 @@ steps:
     echo {\"Operating System\":\"Windows\",\"IDE\":\"Newman y callbackman\",\"Environment\":\"MANAGEMENT\"} > management\allure-results\environment.json
   displayName: 'Create Environment File Management'
 
-- script: |
-    $ErrorActionPreference = 'Stop'
-    & ${env.newmanPath} run HappyPatchCallback.json -g globals.json -r allure --insecure
-    & ${env.newmanPath} run Callback_respuestas_200.json -d Respuestas_200.csv -g globals.json -r allure --insecure
-    & ${env.newmanPath} run Callback_repuestas_401.json -d Respuestas_401.csv -g globals.json -r allure --insecure
-    & ${env.newmanPath} run Callback_respuestas_400.json -d Respuestas_400.csv -g globals.json -r allure --insecure
-    & ${env.newmanPath} run Callback_no_enviar_campos.json -g globals.json -r allure --insecure
-    & ${env.newmanPath} run CallbackError_500.json -g globals.json -r allure --insecure
-    & ${env.newmanPath} run CambioFormatoTxt.json -g globals.json -r allure --insecure
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      $ErrorActionPreference = 'Stop'
+      & ${env:newmanPath} run HappyPatchCallback.json -g globals.json -r allure --insecure
+      & ${env:newmanPath} run Callback_respuestas_200.json -d Respuestas_200.csv -g globals.json -r allure --insecure
+      & ${env:newmanPath} run Callback_repuestas_401.json -d Respuestas_401.csv -g globals.json -r allure --insecure
+      & ${env:newmanPath} run Callback_respuestas_400.json -d Respuestas_400.csv -g globals.json -r allure --insecure
+      & ${env:newmanPath} run Callback_no_enviar_campos.json -g globals.json -r allure --insecure
+      & ${env:newmanPath} run CallbackError_500.json -g globals.json -r allure --insecure
+      & ${env:newmanPath} run CambioFormatoTxt.json -g globals.json -r allure --insecure
   displayName: 'Run Newman Tests Callback'
 
-- script: |
-    $ErrorActionPreference = 'Stop'
-    & ${env.newmanPath} run Happy_Path.json -g globals.json -r allure --insecure
-    & ${env.newmanPath} run Respuestas_Codigos_201.json -d Respuestas_codigo_201.csv -g globals.json -r allure --insecure
-    & ${env.newmanPath} run Errores401.json -d Errores401.csv -g globals.json -r allure --insecure
-    & ${env.newmanPath} run Errores_400_Codigo1013.json -d Respuestas_codigo_400\(1013\).csv -g globals.json -r allure --insecure
-    & ${env.newmanPath} run Errores_400_Codigo1018.json -d Respuestas_codigo_400\(1018\).csv -g globals.json -r allure --insecure
-    & ${env.newmanPath} run Errores400_sin_campos.json -g globals.json -r allure --insecure
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      $ErrorActionPreference = 'Stop'
+      & ${env:newmanPath} run Happy_Path.json -g globals.json -r allure --insecure
+      & ${env:newmanPath} run Respuestas_Codigos_201.json -d Respuestas_codigo_201.csv -g globals.json -r allure --insecure
+      & ${env:newmanPath} run Errores401.json -d Errores401.csv -g globals.json -r allure --insecure
+      & ${env:newmanPath} run Errores_400_Codigo1013.json -d Respuestas_codigo_400\(1013\).csv -g globals.json -r allure --insecure
+      & ${env:newmanPath} run Errores_400_Codigo1018.json -d Respuestas_codigo_400\(1018\).csv -g globals.json -r allure --insecure
+      & ${env:newmanPath} run Errores400_sin_campos.json -g globals.json -r allure --insecure
   displayName: 'Run Newman Tests Management'
 
-- script: |
-    $ErrorActionPreference = 'Stop'
-    & ${env.newmanPath} run anulacion_happypath.json -g globals.json -e environment.json -r allure --insecure
-    & ${env.newmanPath} run Anulacion_401.json -d Errores_401.csv -g globals.json -r allure --insecure
-    & ${env.newmanPath} run Anulacion_validar_mesageuid.json -d Data_Messageuid.csv -g globals.json -r allure --insecure
-    & ${env.newmanPath} run Anulacion_transferid.json -d Data_TransferId.csv -g globals.json -r allure --insecure
-    & ${env.newmanPath} run anulacion_cambio_ACCEPT.json -e environment.json -g globals.json -r allure --insecure
-    & ${env.newmanPath} run anulacion_cambio_PENDING.json -e environment.json -g globals.json -r allure --insecure
-    & ${env.newmanPath} run anulacion_estado_vacio.json -g globals.json -e environment.json -r allure --insecure
-    & ${env.newmanPath} run Anulacion_sin_enviar.json -g globals.json -r allure --insecure
-    & ${env.newmanPath} run Validar_respuestas.json -g globals.json -r allure --insecure
-    & ${env.newmanPath} run Anulacion_transferencia_ya_anulada.json -g globals.json -e environment.json -r allure --insecure
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      $ErrorActionPreference = 'Stop'
+      & ${env:newmanPath} run anulacion_happypath.json -g globals.json -e environment.json -r allure --insecure
+      & ${env:newmanPath} run Anulacion_401.json -d Errores_401.csv -g globals.json -r allure --insecure
+      & ${env:newmanPath} run Anulacion_validar_mesageuid.json -d Data_Messageuid.csv -g globals.json -r allure --insecure
+      & ${env:newmanPath} run Anulacion_transferid.json -d Data_TransferId.csv -g globals.json -r allure --insecure
+      & ${env:newmanPath} run anulacion_cambio_ACCEPT.json -e environment.json -g globals.json -r allure --insecure
+      & ${env:newmanPath} run anulacion_cambio_PENDING.json -e environment.json -g globals.json -r allure --insecure
+      & ${env:newmanPath} run anulacion_estado_vacio.json -g globals.json -e environment.json -r allure --insecure
+      & ${env:newmanPath} run Anulacion_sin_enviar.json -g globals.json -r allure --insecure
+      & ${env:newmanPath} run Validar_respuestas.json -g globals.json -r allure --insecure
+      & ${env:newmanPath} run Anulacion_transferencia_ya_anulada.json -g globals.json -e environment.json -r allure --insecure
   displayName: 'Run Newman Tests Anulacion'
 
 - script: |
