@@ -1,19 +1,143 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
 trigger:
-- master
+- main
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: 'windows-latest'
+
+variables:
+  newmanPath: 'C:\\Users\\sergiomolina\\AppData\\Roaming\\npm\\newman'
 
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '3.x'
+    addToPath: true
 
 - script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+    npm install -g newman
+    npm install -g allure-commandline
+  displayName: 'Install Newman and Allure'
+
+- checkout: self
+  displayName: 'Checkout repository'
+
+- script: |
+    rmdir /S /Q callback\allure-results
+    rmdir /S /Q management\allure-results
+    rmdir /S /Q anulacion\allure-results
+  displayName: 'Clean environments'
+
+- script: |
+    echo {
+      "name": "Callback",
+      "type": "jenkins",
+      "reportName": "Allure Report"
+    } > callback\allure-results\executor.json
+  displayName: 'Setup Callback'
+
+- script: |
+    echo {
+      "name": "Management",
+      "type": "jenkins",
+      "reportName": "Allure Report"
+    } > management\allure-results\executor.json
+  displayName: 'Setup Management'
+
+- script: |
+    echo {
+      "name": "Anulacion",
+      "type": "jenkins",
+      "reportName": "Allure Report"
+    } > anulacion\allure-results\executor.json
+  displayName: 'Setup Anulacion'
+
+- script: |
+    echo {
+      "Operating System": "Windows",
+      "IDE": "Newman y callbackman",
+      "Environment": "CALLBACK"
+    } > callback\allure-results\environment.json
+  displayName: 'Create Environment File Callback'
+
+- script: |
+    echo {
+      "Operating System": "Windows",
+      "IDE": "Newman y callbackman",
+      "Environment": "MANAGEMENT"
+    } > management\allure-results\environment.json
+  displayName: 'Create Environment File Management'
+
+- script: |
+    $ErrorActionPreference = 'Stop'
+    & ${env.newmanPath} run HappyPatchCallback.json -g globals.json -r allure --insecure
+    & ${env.newmanPath} run Callback_respuestas_200.json -d Respuestas_200.csv -g globals.json -r allure --insecure
+    & ${env.newmanPath} run Callback_repuestas_401.json -d Respuestas_401.csv -g globals.json -r allure --insecure
+    & ${env.newmanPath} run Callback_respuestas_400.json -d Respuestas_400.csv -g globals.json -r allure --insecure
+    & ${env.newmanPath} run Callback_no_enviar_campos.json -g globals.json -r allure --insecure
+    & ${env.newmanPath} run CallbackError_500.json -g globals.json -r allure --insecure
+    & ${env.newmanPath} run CambioFormatoTxt.json -g globals.json -r allure --insecure
+  displayName: 'Run Newman Tests Callback'
+
+- script: |
+    $ErrorActionPreference = 'Stop'
+    & ${env.newmanPath} run Happy_Path.json -g globals.json -r allure --insecure
+    & ${env.newmanPath} run Respuestas_Codigos_201.json -d Respuestas_codigo_201.csv -g globals.json -r allure --insecure
+    & ${env.newmanPath} run Errores401.json -d Errores401.csv -g globals.json -r allure --insecure
+    & ${env.newmanPath} run Errores_400_Codigo1013.json -d Respuestas_codigo_400\(1013\).csv -g globals.json -r allure --insecure
+    & ${env.newmanPath} run Errores_400_Codigo1018.json -d Respuestas_codigo_400\(1018\).csv -g globals.json -r allure --insecure
+    & ${env.newmanPath} run Errores400_sin_campos.json -g globals.json -r allure --insecure
+  displayName: 'Run Newman Tests Management'
+
+- script: |
+    $ErrorActionPreference = 'Stop'
+    & ${env.newmanPath} run anulacion_happypath.json -g globals.json -e environment.json -r allure --insecure
+    & ${env.newmanPath} run Anulacion_401.json -d Errores_401.csv -g globals.json -r allure --insecure
+    & ${env.newmanPath} run Anulacion_validar_mesageuid.json -d Data_Messageuid.csv -g globals.json -r allure --insecure
+    & ${env.newmanPath} run Anulacion_transferid.json -d Data_TransferId.csv -g globals.json -r allure --insecure
+    & ${env.newmanPath} run anulacion_cambio_ACCEPT.json -e environment.json -g globals.json -r allure --insecure
+    & ${env.newmanPath} run anulacion_cambio_PENDING.json -e environment.json -g globals.json -r allure --insecure
+    & ${env.newmanPath} run anulacion_estado_vacio.json -g globals.json -e environment.json -r allure --insecure
+    & ${env.newmanPath} run Anulacion_sin_enviar.json -g globals.json -r allure --insecure
+    & ${env.newmanPath} run Validar_respuestas.json -g globals.json -r allure --insecure
+    & ${env.newmanPath} run Anulacion_transferencia_ya_anulada.json -g globals.json -e environment.json -r allure --insecure
+  displayName: 'Run Newman Tests Anulacion'
+
+- script: |
+    allure generate --single-file callback\allure-results --clean -o callback\allure-report
+    ren callback\allure-report\index.html callback_report.html
+  displayName: 'Create Callback Report'
+
+- script: |
+    allure generate --single-file management\allure-results --clean -o management\allure-report
+    ren management\allure-report\index.html management_report.html
+  displayName: 'Create Management Report'
+
+- script: |
+    allure generate --single-file anulacion\allure-results --clean -o anulacion\allure-report
+    ren anulacion\allure-report\index.html anulacion_report.html
+  displayName: 'Create Anulacion Report'
+
+- script: |
+    rmdir /S /Q AllureReports
+    del AllureReports.zip
+    mkdir AllureReports
+    copy callback\allure-report\callback_report.html AllureReports\callback_report.html
+    copy management\allure-report\management_report.html AllureReports\management_report.html
+    copy anulacion\allure-report\anulacion_report.html AllureReports\anulacion_report.html
+    powershell Compress-Archive -Path AllureReports\* -DestinationPath AllureReports.zip
+  displayName: 'Zip Reports'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)\AllureReports.zip'
+    ArtifactName: 'AllureReports'
+  displayName: 'Publish Allure Reports'
+
+- task: SendEmail@1
+  inputs:
+    subject: 'Resultado Microservicios Automatización Pago presente: flujo de fallos, anulación'
+    body: 'Resultados de la ejecución del lanzamiento de los microservicios de transfiya'
+    to: 'molinabernal@gmail.com'
+    from: 'achjenkinsnewman@gmail.com'
+    attachments: '$(Build.ArtifactStagingDirectory)\AllureReports.zip'
+  displayName: 'Send Email with Allure Reports'
