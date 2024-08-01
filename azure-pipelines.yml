@@ -4,15 +4,7 @@ trigger:
 pool:
   vmImage: 'windows-latest'
 
-variables:
-  newmanPath: 'C:\\Users\\sergiomolina\\AppData\\Roaming\\npm\\newman'
-
 steps:
-- task: UsePythonVersion@0
-  inputs:
-    versionSpec: '3.x'
-    addToPath: true
-
 - script: |
     npm install -g newman
     npm install -g allure-commandline
@@ -51,17 +43,17 @@ steps:
     targetType: 'inline'
     script: |
       $ErrorActionPreference = 'Stop'
-      $newmanPath = "${env:newmanPath}"
-      if (Test-Path $newmanPath) {
-        Invoke-Expression "$newmanPath run HappyPatchCallback.json -g globals.json -r allure --insecure"
-        Invoke-Expression "$newmanPath run Callback_respuestas_200.json -d Respuestas_200.csv -g globals.json -r allure --insecure"
-        Invoke-Expression "$newmanPath run Callback_repuestas_401.json -d Respuestas_401.csv -g globals.json -r allure --insecure"
-        Invoke-Expression "$newmanPath run Callback_respuestas_400.json -d Respuestas_400.csv -g globals.json -r allure --insecure"
-        Invoke-Expression "$newmanPath run Callback_no_enviar_campos.json -g globals.json -r allure --insecure"
-        Invoke-Expression "$newmanPath run CallbackError_500.json -g globals.json -r allure --insecure"
-        Invoke-Expression "$newmanPath run CambioFormatoTxt.json -g globals.json -r allure --insecure"
+      $newmanPath = 'newman'
+      if (Get-Command $newmanPath -ErrorAction SilentlyContinue) {
+        & $newmanPath run HappyPatchCallback.json -g globals.json -r allure --insecure
+        & $newmanPath run Callback_respuestas_200.json -d Respuestas_200.csv -g globals.json -r allure --insecure
+        & $newmanPath run Callback_repuestas_401.json -d Respuestas_401.csv -g globals.json -r allure --insecure
+        & $newmanPath run Callback_respuestas_400.json -d Respuestas_400.csv -g globals.json -r allure --insecure
+        & $newmanPath run Callback_no_enviar_campos.json -g globals.json -r allure --insecure
+        & $newmanPath run CallbackError_500.json -g globals.json -r allure --insecure
+        & $newmanPath run CambioFormatoTxt.json -g globals.json -r allure --insecure
       } else {
-        Write-Error "Newman not found at path: $newmanPath"
+        Write-Error "Newman not found. Make sure it's installed correctly."
       }
   displayName: 'Run Newman Tests Callback'
 
@@ -70,16 +62,16 @@ steps:
     targetType: 'inline'
     script: |
       $ErrorActionPreference = 'Stop'
-      $newmanPath = "${env:newmanPath}"
-      if (Test-Path $newmanPath) {
-        Invoke-Expression "$newmanPath run Happy_Path.json -g globals.json -r allure --insecure"
-        Invoke-Expression "$newmanPath run Respuestas_Codigos_201.json -d Respuestas_codigo_201.csv -g globals.json -r allure --insecure"
-        Invoke-Expression "$newmanPath run Errores401.json -d Errores401.csv -g globals.json -r allure --insecure"
-        Invoke-Expression "$newmanPath run Errores_400_Codigo1013.json -d Respuestas_codigo_400\(1013\).csv -g globals.json -r allure --insecure"
-        Invoke-Expression "$newmanPath run Errores_400_Codigo1018.json -d Respuestas_codigo_400\(1018\).csv -g globals.json -r allure --insecure"
-        Invoke-Expression "$newmanPath run Errores400_sin_campos.json -g globals.json -r allure --insecure"
+      $newmanPath = 'newman'
+      if (Get-Command $newmanPath -ErrorAction SilentlyContinue) {
+        & $newmanPath run Happy_Path.json -g globals.json -r allure --insecure
+        & $newmanPath run Respuestas_Codigos_201.json -d Respuestas_codigo_201.csv -g globals.json -r allure --insecure
+        & $newmanPath run Errores401.json -d Errores401.csv -g globals.json -r allure --insecure
+        & $newmanPath run Errores_400_Codigo1013.json -d Respuestas_codigo_400\(1013\).csv -g globals.json -r allure --insecure
+        & $newmanPath run Errores_400_Codigo1018.json -d Respuestas_codigo_400\(1018\).csv -g globals.json -r allure --insecure
+        & $newmanPath run Errores400_sin_campos.json -g globals.json -r allure --insecure
       } else {
-        Write-Error "Newman not found at path: $newmanPath"
+        Write-Error "Newman not found. Make sure it's installed correctly."
       }
   displayName: 'Run Newman Tests Management'
 
@@ -88,20 +80,20 @@ steps:
     targetType: 'inline'
     script: |
       $ErrorActionPreference = 'Stop'
-      $newmanPath = "${env:newmanPath}"
-      if (Test-Path $newmanPath) {
-        Invoke-Expression "$newmanPath run anulacion_happypath.json -g globals.json -e environment.json -r allure --insecure"
-        Invoke-Expression "$newmanPath run Anulacion_401.json -d Errores_401.csv -g globals.json -r allure --insecure"
-        Invoke-Expression "$newmanPath run Anulacion_validar_mesageuid.json -d Data_Messageuid.csv -g globals.json -r allure --insecure"
-        Invoke-Expression "$newmanPath run Anulacion_transferid.json -d Data_TransferId.csv -g globals.json -r allure --insecure"
-        Invoke-Expression "$newmanPath run anulacion_cambio_ACCEPT.json -e environment.json -g globals.json -r allure --insecure"
-        Invoke-Expression "$newmanPath run anulacion_cambio_PENDING.json -e environment.json -g globals.json -r allure --insecure"
-        Invoke-Expression "$newmanPath run anulacion_estado_vacio.json -g globals.json -e environment.json -r allure --insecure"
-        Invoke-Expression "$newmanPath run Anulacion_sin_enviar.json -g globals.json -r allure --insecure"
-        Invoke-Expression "$newmanPath run Validar_respuestas.json -g globals.json -r allure --insecure"
-        Invoke-Expression "$newmanPath run Anulacion_transferencia_ya_anulada.json -g globals.json -e environment.json -r allure --insecure"
+      $newmanPath = 'newman'
+      if (Get-Command $newmanPath -ErrorAction SilentlyContinue) {
+        & $newmanPath run anulacion_happypath.json -g globals.json -e environment.json -r allure --insecure
+        & $newmanPath run Anulacion_401.json -d Errores_401.csv -g globals.json -r allure --insecure
+        & $newmanPath run Anulacion_validar_mesageuid.json -d Data_Messageuid.csv -g globals.json -r allure --insecure
+        & $newmanPath run Anulacion_transferid.json -d Data_TransferId.csv -g globals.json -r allure --insecure
+        & $newmanPath run anulacion_cambio_ACCEPT.json -e environment.json -g globals.json -r allure --insecure
+        & $newmanPath run anulacion_cambio_PENDING.json -e environment.json -g globals.json -r allure --insecure
+        & $newmanPath run anulacion_estado_vacio.json -g globals.json -e environment.json -r allure --insecure
+        & $newmanPath run Anulacion_sin_enviar.json -g globals.json -r allure --insecure
+        & $newmanPath run Validar_respuestas.json -g globals.json -r allure --insecure
+        & $newmanPath run Anulacion_transferencia_ya_anulada.json -g globals.json -e environment.json -r allure --insecure
       } else {
-        Write-Error "Newman not found at path: $newmanPath"
+        Write-Error "Newman not found. Make sure it's installed correctly."
       }
   displayName: 'Run Newman Tests Anulacion'
 
