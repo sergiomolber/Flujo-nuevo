@@ -19,6 +19,7 @@ steps:
   displayName: 'List Files in Directory'
 
 
+
 - script: |
     mkdir callback\allure-results
     echo {\"name\":\"Callback\",\"type\":\"jenkins\",\"reportName\":\"Allure Report\"} > callback\allure-results\executor.json
@@ -42,6 +43,24 @@ steps:
     echo {\"Operating System\":\"Windows\",\"IDE\":\"Newman y callbackman\",\"Environment\":\"MANAGEMENT\"} > management\allure-results\environment.json
   displayName: 'Create Environment File Management'
 
+- script: |
+    echo {\"Operating System\":\"Windows\",\"IDE\":\"Newman y callbackman\",\"Environment\":\"ANULACION\"} > anulacion\allure-results\environment.json
+  displayName: 'Create Environment File Anulacion'
+
+# Step to ensure files are in the correct directory
+- script: |
+    copy $(Build.SourcesDirectory)\globals.json $(Build.ArtifactStagingDirectory)
+    copy $(Build.SourcesDirectory)\Respuestas_200.csv $(Build.ArtifactStagingDirectory)
+    copy $(Build.SourcesDirectory)\Respuestas_401.csv $(Build.ArtifactStagingDirectory)
+    copy $(Build.SourcesDirectory)\Respuestas_400.csv $(Build.ArtifactStagingDirectory)
+  displayName: 'Copy required files to staging directory'
+
+# Verifying that files are copied correctly
+- script: |
+    echo "Listing files in the staging directory:"
+    dir $(Build.ArtifactStagingDirectory) /s
+  displayName: 'List Files in Staging Directory'
+
 - task: PowerShell@2
   inputs:
     targetType: 'inline'
@@ -49,13 +68,13 @@ steps:
       $ErrorActionPreference = 'Stop'
       $newmanPath = 'newman'
       if (Get-Command $newmanPath -ErrorAction SilentlyContinue) {
-        & $newmanPath run HappyPatchCallback.json -g globals.json -r allure --insecure
-        & $newmanPath run Callback_respuestas_200.json -d Respuestas_200.csv -g globals.json -r allure --insecure
-        & $newmanPath run Callback_repuestas_401.json -d Respuestas_401.csv -g globals.json -r allure --insecure
-        & $newmanPath run Callback_respuestas_400.json -d Respuestas_400.csv -g globals.json -r allure --insecure
-        & $newmanPath run Callback_no_enviar_campos.json -g globals.json -r allure --insecure
-        & $newmanPath run CallbackError_500.json -g globals.json -r allure --insecure
-        & $newmanPath run CambioFormatoTxt.json -g globals.json -r allure --insecure
+        & $newmanPath run HappyPatchCallback.json -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
+        & $newmanPath run Callback_respuestas_200.json -d $(Build.ArtifactStagingDirectory)\Respuestas_200.csv -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
+        & $newmanPath run Callback_repuestas_401.json -d $(Build.ArtifactStagingDirectory)\Respuestas_401.csv -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
+        & $newmanPath run Callback_respuestas_400.json -d $(Build.ArtifactStagingDirectory)\Respuestas_400.csv -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
+        & $newmanPath run Callback_no_enviar_campos.json -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
+        & $newmanPath run CallbackError_500.json -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
+        & $newmanPath run CambioFormatoTxt.json -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
       } else {
         Write-Error "Newman not found. Make sure it's installed correctly."
       }
@@ -68,12 +87,12 @@ steps:
       $ErrorActionPreference = 'Stop'
       $newmanPath = 'newman'
       if (Get-Command $newmanPath -ErrorAction SilentlyContinue) {
-        & $newmanPath run Happy_Path.json -g globals.json -r allure --insecure
-        & $newmanPath run Respuestas_Codigos_201.json -d Respuestas_codigo_201.csv -g globals.json -r allure --insecure
-        & $newmanPath run Errores401.json -d Errores401.csv -g globals.json -r allure --insecure
-        & $newmanPath run Errores_400_Codigo1013.json -d Respuestas_codigo_400\(1013\).csv -g globals.json -r allure --insecure
-        & $newmanPath run Errores_400_Codigo1018.json -d Respuestas_codigo_400\(1018\).csv -g globals.json -r allure --insecure
-        & $newmanPath run Errores400_sin_campos.json -g globals.json -r allure --insecure
+        & $newmanPath run Happy_Path.json -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
+        & $newmanPath run Respuestas_Codigos_201.json -d $(Build.ArtifactStagingDirectory)\Respuestas_codigo_201.csv -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
+        & $newmanPath run Errores401.json -d $(Build.ArtifactStagingDirectory)\Errores401.csv -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
+        & $newmanPath run Errores_400_Codigo1013.json -d $(Build.ArtifactStagingDirectory)\Respuestas_codigo_400\(1013\).csv -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
+        & $newmanPath run Errores_400_Codigo1018.json -d $(Build.ArtifactStagingDirectory)\Respuestas_codigo_400\(1018\).csv -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
+        & $newmanPath run Errores400_sin_campos.json -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
       } else {
         Write-Error "Newman not found. Make sure it's installed correctly."
       }
@@ -86,16 +105,16 @@ steps:
       $ErrorActionPreference = 'Stop'
       $newmanPath = 'newman'
       if (Get-Command $newmanPath -ErrorAction SilentlyContinue) {
-        & $newmanPath run anulacion_happypath.json -g globals.json -e environment.json -r allure --insecure
-        & $newmanPath run Anulacion_401.json -d Errores_401.csv -g globals.json -r allure --insecure
-        & $newmanPath run Anulacion_validar_mesageuid.json -d Data_Messageuid.csv -g globals.json -r allure --insecure
-        & $newmanPath run Anulacion_transferid.json -d Data_TransferId.csv -g globals.json -r allure --insecure
-        & $newmanPath run anulacion_cambio_ACCEPT.json -e environment.json -g globals.json -r allure --insecure
-        & $newmanPath run anulacion_cambio_PENDING.json -e environment.json -g globals.json -r allure --insecure
-        & $newmanPath run anulacion_estado_vacio.json -g globals.json -e environment.json -r allure --insecure
-        & $newmanPath run Anulacion_sin_enviar.json -g globals.json -r allure --insecure
-        & $newmanPath run Validar_respuestas.json -g globals.json -r allure --insecure
-        & $newmanPath run Anulacion_transferencia_ya_anulada.json -g globals.json -e environment.json -r allure --insecure
+        & $newmanPath run anulacion_happypath.json -g $(Build.ArtifactStagingDirectory)\globals.json -e $(Build.ArtifactStagingDirectory)\environment.json -r allure --insecure
+        & $newmanPath run Anulacion_401.json -d $(Build.ArtifactStagingDirectory)\Errores_401.csv -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
+        & $newmanPath run Anulacion_validar_mesageuid.json -d $(Build.ArtifactStagingDirectory)\Data_Messageuid.csv -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
+        & $newmanPath run Anulacion_transferid.json -d $(Build.ArtifactStagingDirectory)\Data_TransferId.csv -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
+        & $newmanPath run anulacion_cambio_ACCEPT.json -e $(Build.ArtifactStagingDirectory)\environment.json -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
+        & $newmanPath run anulacion_cambio_PENDING.json -e $(Build.ArtifactStagingDirectory)\environment.json -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
+        & $newmanPath run anulacion_estado_vacio.json -g $(Build.ArtifactStagingDirectory)\globals.json -e $(Build.ArtifactStagingDirectory)\environment.json -r allure --insecure
+        & $newmanPath run Anulacion_sin_enviar.json -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
+        & $newmanPath run Validar_respuestas.json -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
+        & $newmanPath run Anulacion_transferencia_ya_anulada.json -g $(Build.ArtifactStagingDirectory)\globals.json -e $(Build.ArtifactStagingDirectory)\environment.json -r allure --insecure
       } else {
         Write-Error "Newman not found. Make sure it's installed correctly."
       }
