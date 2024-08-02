@@ -14,9 +14,9 @@ steps:
   displayName: 'Checkout repository'
 
 - script: |
-    echo "Listing files in the directory:"
-    dir /s
-  displayName: 'List Files in Directory'
+    echo "Listing files in the sources directory:"
+    dir $(Build.SourcesDirectory) /s
+  displayName: 'List Files in Sources Directory'
 
 
 
@@ -47,7 +47,6 @@ steps:
     echo {\"Operating System\":\"Windows\",\"IDE\":\"Newman y callbackman\",\"Environment\":\"ANULACION\"} > anulacion\allure-results\environment.json
   displayName: 'Create Environment File Anulacion'
 
-# Step to ensure files are in the correct directory
 - script: |
     copy $(Build.SourcesDirectory)\globals.json $(Build.ArtifactStagingDirectory)
     copy $(Build.SourcesDirectory)\Respuestas_200.csv $(Build.ArtifactStagingDirectory)
@@ -55,7 +54,6 @@ steps:
     copy $(Build.SourcesDirectory)\Respuestas_400.csv $(Build.ArtifactStagingDirectory)
   displayName: 'Copy required files to staging directory'
 
-# Verifying that files are copied correctly
 - script: |
     echo "Listing files in the staging directory:"
     dir $(Build.ArtifactStagingDirectory) /s
