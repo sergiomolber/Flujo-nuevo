@@ -12,7 +12,7 @@ steps:
 
 - script: |
     echo "Listing files in the sources directory after checkout:"
-    dir $(Build.SourcesDirectory) /s
+    Get-ChildItem -Path "$(Build.SourcesDirectory)" -Recurse
   displayName: 'List Files in Sources Directory After Checkout'
 
 - script: |
@@ -44,7 +44,7 @@ steps:
 
 - script: |
     echo "Listing files in the sources directory after setup:"
-    dir $(Build.SourcesDirectory) /s
+    Get-ChildItem -Path "$(Build.SourcesDirectory)" -Recurse
   displayName: 'List Files in Sources Directory After Setup'
 
 - task: PowerShell@2
@@ -122,7 +122,7 @@ steps:
 
 - script: |
     echo "Listing files in the staging directory:"
-    dir $(Build.ArtifactStagingDirectory) /s
+    Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)" -Recurse
   displayName: 'List Files in Staging Directory'
 
 # Resto de tu pipeline aquí...
