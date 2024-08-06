@@ -1,6 +1,3 @@
-trigger:
-- main
-
 pool:
   vmImage: 'windows-latest'
 
@@ -17,7 +14,6 @@ steps:
     echo "Listing files in the sources directory:"
     dir $(Build.SourcesDirectory) /s
   displayName: 'List Files in Sources Directory'
-
 
 - script: |
     mkdir callback\allure-results
@@ -46,17 +42,24 @@ steps:
     echo {\"Operating System\":\"Windows\",\"IDE\":\"Newman y callbackman\",\"Environment\":\"ANULACION\"} > anulacion\allure-results\environment.json
   displayName: 'Create Environment File Anulacion'
 
-- script: |
-    copy $(Build.SourcesDirectory)\globals.json $(Build.ArtifactStagingDirectory)
-    copy $(Build.SourcesDirectory)\Respuestas_200.csv $(Build.ArtifactStagingDirectory)
-    copy $(Build.SourcesDirectory)\Respuestas_401.csv $(Build.ArtifactStagingDirectory)
-    copy $(Build.SourcesDirectory)\Respuestas_400.csv $(Build.ArtifactStagingDirectory)
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      $ErrorActionPreference = 'Stop'
+      Copy-Item -Path "$(Build.SourcesDirectory)\globals.json" -Destination "$(Build.ArtifactStagingDirectory)"
+      Copy-Item -Path "$(Build.SourcesDirectory)\Respuestas_200.csv" -Destination "$(Build.ArtifactStagingDirectory)"
+      Copy-Item -Path "$(Build.SourcesDirectory)\Respuestas_401.csv" -Destination "$(Build.ArtifactStagingDirectory)"
+      Copy-Item -Path "$(Build.SourcesDirectory)\Respuestas_400.csv" -Destination "$(Build.ArtifactStagingDirectory)"
   displayName: 'Copy required files to staging directory'
 
 - script: |
     echo "Listing files in the staging directory:"
     dir $(Build.ArtifactStagingDirectory) /s
   displayName: 'List Files in Staging Directory'
+
+# Resto de tu pipeline aquí...
+
 
 - task: PowerShell@2
   inputs:
