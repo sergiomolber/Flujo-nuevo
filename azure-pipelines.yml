@@ -10,9 +10,12 @@ steps:
 - checkout: self
   displayName: 'Checkout repository'
 
-- script: |
-    echo "Listing files in the sources directory after checkout:"
-    Get-ChildItem -Path "$(Build.SourcesDirectory)" -Recurse
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      echo "Listing files in the sources directory after checkout:"
+      Get-ChildItem -Path "$(Build.SourcesDirectory)" -Recurse
   displayName: 'List Files in Sources Directory After Checkout'
 
 - script: |
@@ -31,20 +34,23 @@ steps:
   displayName: 'Setup Anulacion'
 
 - script: |
-    echo {\"Operating System\":\"Windows\",\"IDE\":\"Newman y callbackman\",\"Environment\":\"CALLBACK\"} > callback\allure-results\environment.json
+    echo {\"Operating System\":\"Windows\",\"IDE\":\"Newman y Postman\",\"Environment\":\"CALLBACK\"} > callback\allure-results\environment.json
   displayName: 'Create Environment File Callback'
 
 - script: |
-    echo {\"Operating System\":\"Windows\",\"IDE\":\"Newman y callbackman\",\"Environment\":\"MANAGEMENT\"} > management\allure-results\environment.json
+    echo {\"Operating System\":\"Windows\",\"IDE\":\"Newman y Postman\",\"Environment\":\"MANAGEMENT\"} > management\allure-results\environment.json
   displayName: 'Create Environment File Management'
 
 - script: |
-    echo {\"Operating System\":\"Windows\",\"IDE\":\"Newman y callbackman\",\"Environment\":\"ANULACION\"} > anulacion\allure-results\environment.json
+    echo {\"Operating System\":\"Windows\",\"IDE\":\"Newman y Postman\",\"Environment\":\"ANULACION\"} > anulacion\allure-results\environment.json
   displayName: 'Create Environment File Anulacion'
 
-- script: |
-    echo "Listing files in the sources directory after setup:"
-    Get-ChildItem -Path "$(Build.SourcesDirectory)" -Recurse
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      echo "Listing files in the sources directory after setup:"
+      Get-ChildItem -Path "$(Build.SourcesDirectory)" -Recurse
   displayName: 'List Files in Sources Directory After Setup'
 
 - task: PowerShell@2
@@ -120,9 +126,12 @@ steps:
       }
   displayName: 'Copy required files to staging directory'
 
-- script: |
-    echo "Listing files in the staging directory:"
-    Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)" -Recurse
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      echo "Listing files in the staging directory:"
+      Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)" -Recurse
   displayName: 'List Files in Staging Directory'
 
 # Resto de tu pipeline aquí...
@@ -144,7 +153,7 @@ steps:
       } else {
         Write-Error "Newman not found. Make sure it's installed correctly."
       }
-  displayName: 'Run Newman Tests Callback'
+  displayName: 'Run'
 
 - task: PowerShell@2
   inputs:
