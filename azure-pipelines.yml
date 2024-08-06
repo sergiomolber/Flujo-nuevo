@@ -42,15 +42,82 @@ steps:
     echo {\"Operating System\":\"Windows\",\"IDE\":\"Newman y callbackman\",\"Environment\":\"ANULACION\"} > anulacion\allure-results\environment.json
   displayName: 'Create Environment File Anulacion'
 
+- script: |
+    echo "Listing files in the sources directory after setup:"
+    dir $(Build.SourcesDirectory) /s
+  displayName: 'List Files in Sources Directory After Setup'
+
 - task: PowerShell@2
   inputs:
     targetType: 'inline'
     script: |
       $ErrorActionPreference = 'Stop'
-      Copy-Item -Path "$(Build.SourcesDirectory)\globals.json" -Destination "$(Build.ArtifactStagingDirectory)"
-      Copy-Item -Path "$(Build.SourcesDirectory)\Respuestas_200.csv" -Destination "$(Build.ArtifactStagingDirectory)"
-      Copy-Item -Path "$(Build.SourcesDirectory)\Respuestas_401.csv" -Destination "$(Build.ArtifactStagingDirectory)"
-      Copy-Item -Path "$(Build.SourcesDirectory)\Respuestas_400.csv" -Destination "$(Build.ArtifactStagingDirectory)"
+      
+      # Validating and copying files from callback folder
+      if (Test-Path "$(Build.SourcesDirectory)\callback\globals.json") {
+        Copy-Item -Path "$(Build.SourcesDirectory)\callback\globals.json" -Destination "$(Build.ArtifactStagingDirectory)"
+      } else {
+        Write-Error "globals.json not found in $(Build.SourcesDirectory)\callback"
+      }
+      if (Test-Path "$(Build.SourcesDirectory)\callback\Respuestas_200.csv") {
+        Copy-Item -Path "$(Build.SourcesDirectory)\callback\Respuestas_200.csv" -Destination "$(Build.ArtifactStagingDirectory)"
+      } else {
+        Write-Error "Respuestas_200.csv not found in $(Build.SourcesDirectory)\callback"
+      }
+      if (Test-Path "$(Build.SourcesDirectory)\callback\Respuestas_401.csv") {
+        Copy-Item -Path "$(Build.SourcesDirectory)\callback\Respuestas_401.csv" -Destination "$(Build.ArtifactStagingDirectory)"
+      } else {
+        Write-Error "Respuestas_401.csv not found in $(Build.SourcesDirectory)\callback"
+      }
+      if (Test-Path "$(Build.SourcesDirectory)\callback\Respuestas_400.csv") {
+        Copy-Item -Path "$(Build.SourcesDirectory)\callback\Respuestas_400.csv" -Destination "$(Build.ArtifactStagingDirectory)"
+      } else {
+        Write-Error "Respuestas_400.csv not found in $(Build.SourcesDirectory)\callback"
+      }
+
+      # Validating and copying files from management folder
+      if (Test-Path "$(Build.SourcesDirectory)\management\globals.json") {
+        Copy-Item -Path "$(Build.SourcesDirectory)\management\globals.json" -Destination "$(Build.ArtifactStagingDirectory)"
+      } else {
+        Write-Error "globals.json not found in $(Build.SourcesDirectory)\management"
+      }
+      if (Test-Path "$(Build.SourcesDirectory)\management\Respuestas_200.csv") {
+        Copy-Item -Path "$(Build.SourcesDirectory)\management\Respuestas_200.csv" -Destination "$(Build.ArtifactStagingDirectory)"
+      } else {
+        Write-Error "Respuestas_200.csv not found in $(Build.SourcesDirectory)\management"
+      }
+      if (Test-Path "$(Build.SourcesDirectory)\management\Respuestas_401.csv") {
+        Copy-Item -Path "$(Build.SourcesDirectory)\management\Respuestas_401.csv" -Destination "$(Build.ArtifactStagingDirectory)"
+      } else {
+        Write-Error "Respuestas_401.csv not found in $(Build.SourcesDirectory)\management"
+      }
+      if (Test-Path "$(Build.SourcesDirectory)\management\Respuestas_400.csv") {
+        Copy-Item -Path "$(Build.SourcesDirectory)\management\Respuestas_400.csv" -Destination "$(Build.ArtifactStagingDirectory)"
+      } else {
+        Write-Error "Respuestas_400.csv not found in $(Build.SourcesDirectory)\management"
+      }
+
+      # Validating and copying files from anulacion folder
+      if (Test-Path "$(Build.SourcesDirectory)\anulacion\globals.json") {
+        Copy-Item -Path "$(Build.SourcesDirectory)\anulacion\globals.json" -Destination "$(Build.ArtifactStagingDirectory)"
+      } else {
+        Write-Error "globals.json not found in $(Build.SourcesDirectory)\anulacion"
+      }
+      if (Test-Path "$(Build.SourcesDirectory)\anulacion\Respuestas_200.csv") {
+        Copy-Item -Path "$(Build.SourcesDirectory)\anulacion\Respuestas_200.csv" -Destination "$(Build.ArtifactStagingDirectory)"
+      } else {
+        Write-Error "Respuestas_200.csv not found in $(Build.SourcesDirectory)\anulacion"
+      }
+      if (Test-Path "$(Build.SourcesDirectory)\anulacion\Respuestas_401.csv") {
+        Copy-Item -Path "$(Build.SourcesDirectory)\anulacion\Respuestas_401.csv" -Destination "$(Build.ArtifactStagingDirectory)"
+      } else {
+        Write-Error "Respuestas_401.csv not found in $(Build.SourcesDirectory)\anulacion"
+      }
+      if (Test-Path "$(Build.SourcesDirectory)\anulacion\Respuestas_400.csv") {
+        Copy-Item -Path "$(Build.SourcesDirectory)\anulacion\Respuestas_400.csv" -Destination "$(Build.ArtifactStagingDirectory)"
+      } else {
+        Write-Error "Respuestas_400.csv not found in $(Build.SourcesDirectory)\anulacion"
+      }
   displayName: 'Copy required files to staging directory'
 
 - script: |
@@ -60,7 +127,6 @@ steps:
 
 # Resto de tu pipeline aquí...
 
-
 - task: PowerShell@2
   inputs:
     targetType: 'inline'
@@ -68,13 +134,13 @@ steps:
       $ErrorActionPreference = 'Stop'
       $newmanPath = 'newman'
       if (Get-Command $newmanPath -ErrorAction SilentlyContinue) {
-        & $newmanPath run HappyPatchCallback.json -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
-        & $newmanPath run Callback_respuestas_200.json -d $(Build.ArtifactStagingDirectory)\Respuestas_200.csv -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
-        & $newmanPath run Callback_repuestas_401.json -d $(Build.ArtifactStagingDirectory)\Respuestas_401.csv -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
-        & $newmanPath run Callback_respuestas_400.json -d $(Build.ArtifactStagingDirectory)\Respuestas_400.csv -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
-        & $newmanPath run Callback_no_enviar_campos.json -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
-        & $newmanPath run CallbackError_500.json -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
-        & $newmanPath run CambioFormatoTxt.json -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
+        & $newmanPath run $(Build.SourcesDirectory)\callback\HappyPatchCallback.json -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
+        & $newmanPath run $(Build.SourcesDirectory)\callback\Callback_respuestas_200.json -d $(Build.ArtifactStagingDirectory)\Respuestas_200.csv -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
+        & $newmanPath run $(Build.SourcesDirectory)\callback\Callback_repuestas_401.json -d $(Build.ArtifactStagingDirectory)\Respuestas_401.csv -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
+        & $newmanPath run $(Build.SourcesDirectory)\callback\Callback_respuestas_400.json -d $(Build.ArtifactStagingDirectory)\Respuestas_400.csv -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
+        & $newmanPath run $(Build.SourcesDirectory)\callback\Callback_no_enviar_campos.json -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
+        & $newmanPath run $(Build.SourcesDirectory)\callback\CallbackError_500.json -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
+        & $newmanPath run $(Build.SourcesDirectory)\callback\CambioFormatoTxt.json -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
       } else {
         Write-Error "Newman not found. Make sure it's installed correctly."
       }
@@ -87,12 +153,13 @@ steps:
       $ErrorActionPreference = 'Stop'
       $newmanPath = 'newman'
       if (Get-Command $newmanPath -ErrorAction SilentlyContinue) {
-        & $newmanPath run Happy_Path.json -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
-        & $newmanPath run Respuestas_Codigos_201.json -d $(Build.ArtifactStagingDirectory)\Respuestas_codigo_201.csv -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
-        & $newmanPath run Errores401.json -d $(Build.ArtifactStagingDirectory)\Errores401.csv -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
-        & $newmanPath run Errores_400_Codigo1013.json -d $(Build.ArtifactStagingDirectory)\Respuestas_codigo_400\(1013\).csv -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
-        & $newmanPath run Errores_400_Codigo1018.json -d $(Build.ArtifactStagingDirectory)\Respuestas_codigo_400\(1018\).csv -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
-        & $newmanPath run Errores400_sin_campos.json -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
+        & $newmanPath run $(Build.SourcesDirectory)\management\HappyPatchManagement.json -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
+        & $newmanPath run $(Build.SourcesDirectory)\management\Management_respuestas_200.json -d $(Build.ArtifactStagingDirectory)\Respuestas_200.csv -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
+        & $newmanPath run $(Build.SourcesDirectory)\management\Management_respuestas_401.json -d $(Build.ArtifactStagingDirectory)\Respuestas_401.csv -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
+        & $newmanPath run $(Build.SourcesDirectory)\management\Management_respuestas_400.json -d $(Build.ArtifactStagingDirectory)\Respuestas_400.csv -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
+        & $newmanPath run $(Build.SourcesDirectory)\management\Management_no_enviar_campos.json -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
+        & $newmanPath run $(Build.SourcesDirectory)\management\ManagementError_500.json -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
+        & $newmanPath run $(Build.SourcesDirectory)\management\CambioFormatoTxt.json -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
       } else {
         Write-Error "Newman not found. Make sure it's installed correctly."
       }
@@ -105,16 +172,18 @@ steps:
       $ErrorActionPreference = 'Stop'
       $newmanPath = 'newman'
       if (Get-Command $newmanPath -ErrorAction SilentlyContinue) {
-        & $newmanPath run anulacion_happypath.json -g $(Build.ArtifactStagingDirectory)\globals.json -e $(Build.ArtifactStagingDirectory)\environment.json -r allure --insecure
-        & $newmanPath run Anulacion_401.json -d $(Build.ArtifactStagingDirectory)\Errores_401.csv -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
-        & $newmanPath run Anulacion_validar_mesageuid.json -d $(Build.ArtifactStagingDirectory)\Data_Messageuid.csv -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
-        & $newmanPath run Anulacion_transferid.json -d $(Build.ArtifactStagingDirectory)\Data_TransferId.csv -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
-        & $newmanPath run anulacion_cambio_ACCEPT.json -e $(Build.ArtifactStagingDirectory)\environment.json -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
-        & $newmanPath run anulacion_cambio_PENDING.json -e $(Build.ArtifactStagingDirectory)\environment.json -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
+        & $newmanPath run $(Build.SourcesDirectory)\anulacion\HappyPatchAnulacion.json -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
+        & $newmanPath run $(Build.SourcesDirectory)\anulacion\Anulacion_respuestas_200.json -d $(Build.ArtifactStagingDirectory)\Respuestas_200.csv -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
+        & $newmanPath run $(Build.SourcesDirectory)\anulacion\Anulacion_respuestas_401.json -d $(Build.ArtifactStagingDirectory)\Respuestas_401.csv -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
+        & $newmanPath run $(Build.SourcesDirectory)\anulacion\Anulacion_respuestas_400.json -d $(Build.ArtifactStagingDirectory)\Respuestas_400.csv -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
+        & $newmanPath run $(Build.SourcesDirectory)\anulacion\Anulacion_no_enviar_campos.json -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
+        & $newmanPath run $(Build.SourcesDirectory)\anulacion\AnulacionError_500.json -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
+        & $newmanPath run $(Build.SourcesDirectory)\anulacion\CambioFormatoTxt.json -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
       } else {
         Write-Error "Newman not found. Make sure it's installed correctly."
       }
   displayName: 'Run Newman Tests Anulacion'
+
 
 - script: |
     allure generate --single-file callback\allure-results --clean -o callback\allure-report
