@@ -11,9 +11,9 @@ steps:
   displayName: 'Checkout repository'
 
 - script: |
-    echo "Listing files in the sources directory:"
+    echo "Listing files in the sources directory after checkout:"
     dir $(Build.SourcesDirectory) /s
-  displayName: 'List Files in Sources Directory'
+  displayName: 'List Files in Sources Directory After Checkout'
 
 - script: |
     mkdir callback\allure-results
