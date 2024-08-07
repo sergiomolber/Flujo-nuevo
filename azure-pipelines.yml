@@ -7,16 +7,18 @@ pool:
 steps:
 - checkout: self
   displayName: 'Checkout repository'
-
+- task: Npm@1
+  inputs:
+    command: 'install'
+  
 - task: NodeTool@0
   inputs:
     versionSpec: '16.x'
   displayName: 'Install Node.js 16.x'
 
 - script: |
-    npm install -g newman
-    npm install -g newman-reporter-allure
-    npm install -g allure-commandline
+    npm install -g newman@latest
+    install -g newman-reporter-allure@latest allure-commandline@latest
     npm list -g --depth=0
   displayName: 'Install Newman and Allure'
 
