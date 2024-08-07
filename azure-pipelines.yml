@@ -2,9 +2,7 @@ pool:
   vmImage: 'windows-latest'
 
 steps:
-- task: NodeTaskRunnerInstaller@0
-  inputs:
-    nodeVersion: '16'
+
 - task: NodeTool@0
   inputs:
     versionSpec: '16.x'
