@@ -25,7 +25,7 @@ steps:
   displayName: 'Check Newman Version'
   
 - script: |
-    npm list -g --depth=0 | grep newman-reporter-allure
+    npm list -g --depth=0 | findstr newman-reporter-allure
   displayName: 'Check Allure Reporter Installation'
 
 - task: PowerShell@2
