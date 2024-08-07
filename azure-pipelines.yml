@@ -15,6 +15,7 @@ steps:
 
 - script: |
     npm install -g newman
+    npm install -g newman-reporter-allure
     npm install -g allure-commandline
   displayName: 'Install Newman and Allure'
 
