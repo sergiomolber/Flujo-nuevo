@@ -1,18 +1,10 @@
+trigger:
+- main
+
 pool:
   vmImage: 'windows-latest'
 
 steps:
-
-- task: NodeTool@0
-  inputs:
-    versionSpec: '16.x'
-  displayName: 'Install Node.js 16.x'
-
-- script: |
-    npm install -g newman
-    npm install -g allure-commandline
-  displayName: 'Install Newman and Allure'
-
 - checkout: self
   displayName: 'Checkout repository'
 
@@ -29,13 +21,9 @@ steps:
     echo {\"name\":\"Callback\",\"type\":\"jenkins\",\"reportName\":\"Allure Report\"} > callback\allure-results\executor.json
   displayName: 'Setup Callback'
 
-
-
-
 - script: |
     echo {\"Operating System\":\"Windows\",\"IDE\":\"Newman y Postman\",\"Environment\":\"CALLBACK\"} > callback\allure-results\environment.json
   displayName: 'Create Environment File Callback'
-
 
 - task: PowerShell@2
   inputs:
@@ -72,8 +60,6 @@ steps:
       } else {
         Write-Error "Respuestas_400.csv not found in $(Build.SourcesDirectory)\callback"
       }
-
-      
   displayName: 'Copy required files to staging directory'
 
 - task: PowerShell@2
@@ -84,15 +70,15 @@ steps:
       Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)" -Recurse
   displayName: 'List Files in Staging Directory'
 
-# Resto de tu pipeline aquí...
-
 - task: PowerShell@2
   inputs:
     targetType: 'inline'
     script: |
       $ErrorActionPreference = 'Stop'
-      $newmanPath = 'newman'
-      if (Get-Command $newmanPath -ErrorAction SilentlyContinue) {
+      $newmanPath = 'C:\\Users\\sergiomolina\\AppData\\Roaming\\npm\\newman'
+      $allurePath = 'C:\\Users\\sergiomolina\\AppData\\Roaming\\npm\\allure'
+
+      if (Test-Path $newmanPath) {
         & $newmanPath run $(Build.SourcesDirectory)\callback\HappyPatchCallback.json -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
         & $newmanPath run $(Build.SourcesDirectory)\callback\Callback_respuestas_200.json -d $(Build.ArtifactStagingDirectory)\Respuestas_200.csv -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
         & $newmanPath run $(Build.SourcesDirectory)\callback\Callback_repuestas_401.json -d $(Build.ArtifactStagingDirectory)\Respuestas_401.csv -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
@@ -101,16 +87,14 @@ steps:
         & $newmanPath run $(Build.SourcesDirectory)\callback\CallbackError_500.json -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
         & $newmanPath run $(Build.SourcesDirectory)\callback\CambioFormatoTxt.json -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
       } else {
-        Write-Error "Newman not found. Make sure it's installed correctly."
+        Write-Error "Newman not found at path $newmanPath. Make sure it's installed correctly."
       }
-  displayName: 'Run'
+  displayName: 'Run Newman Tests'
 
 - script: |
-    allure generate --single-file callback\allure-results --clean -o callback\allure-report
+    C:\\Users\\sergiomolina\\AppData\\Roaming\\npm\\allure generate --single-file callback\allure-results --clean -o callback\allure-report
     ren callback\allure-report\index.html callback_report.html
   displayName: 'Create Callback Report'
-
-
 
 - script: |
     rmdir /S /Q AllureReports
