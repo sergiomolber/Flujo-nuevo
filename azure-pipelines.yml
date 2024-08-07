@@ -2,6 +2,11 @@ pool:
   vmImage: 'windows-latest'
 
 steps:
+- task: NodeTool@0
+  inputs:
+    versionSpec: '14.x'
+  displayName: 'Install Node.js'
+
 - script: |
     npm install -g newman
     npm install -g allure-commandline
