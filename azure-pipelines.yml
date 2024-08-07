@@ -20,6 +20,14 @@ steps:
     npm audit fix --force
   displayName: 'Install Newman, Allure, and Update Dependencies'
 
+- script: |
+    newman --version
+  displayName: 'Check Newman Version'
+  
+- script: |
+    npm list -g --depth=0 | grep newman-reporter-allure
+  displayName: 'Check Allure Reporter Installation'
+
 - task: PowerShell@2
   inputs:
     targetType: 'inline'
