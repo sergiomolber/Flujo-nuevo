@@ -14,10 +14,11 @@ steps:
   displayName: 'Install Node.js 16.x'
 
 - script: |
-    npm install -g newman@latest
-    install -g newman-reporter-allure@latest allure-commandline@latest
-    npm list -g --depth=0
-  displayName: 'Install Newman and Allure'
+    npm install -g newman
+    npm install -g allure-commandline --save-dev
+    npm install uuid@latest
+    npm audit fix --force
+  displayName: 'Install Newman, Allure, and Update Dependencies'
 
 - task: PowerShell@2
   inputs:
