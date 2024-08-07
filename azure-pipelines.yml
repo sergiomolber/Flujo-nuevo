@@ -17,6 +17,7 @@ steps:
     npm install -g newman
     npm install -g newman-reporter-allure
     npm install -g allure-commandline
+    npm list -g --depth=0
   displayName: 'Install Newman and Allure'
 
 - task: PowerShell@2
@@ -48,38 +49,9 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      $ErrorActionPreference = 'Stop'
-      
-      # Validating and copying files from callback folder
-      if (Test-Path "$(Build.SourcesDirectory)\callback\globals.json") {
-        Copy-Item -Path "$(Build.SourcesDirectory)\callback\globals.json" -Destination "$(Build.ArtifactStagingDirectory)"
-      } else {
-        Write-Error "globals.json not found in $(Build.SourcesDirectory)\callback"
-      }
-      if (Test-Path "$(Build.SourcesDirectory)\callback\Respuestas_200.csv") {
-        Copy-Item -Path "$(Build.SourcesDirectory)\callback\Respuestas_200.csv" -Destination "$(Build.ArtifactStagingDirectory)"
-      } else {
-        Write-Error "Respuestas_200.csv not found in $(Build.SourcesDirectory)\callback"
-      }
-      if (Test-Path "$(Build.SourcesDirectory)\callback\Respuestas_401.csv") {
-        Copy-Item -Path "$(Build.SourcesDirectory)\callback\Respuestas_401.csv" -Destination "$(Build.ArtifactStagingDirectory)"
-      } else {
-        Write-Error "Respuestas_401.csv not found in $(Build.SourcesDirectory)\callback"
-      }
-      if (Test-Path "$(Build.SourcesDirectory)\callback\Respuestas_400.csv") {
-        Copy-Item -Path "$(Build.SourcesDirectory)\callback\Respuestas_400.csv" -Destination "$(Build.ArtifactStagingDirectory)"
-      } else {
-        Write-Error "Respuestas_400.csv not found in $(Build.SourcesDirectory)\callback"
-      }
-  displayName: 'Copy required files to staging directory'
-
-- task: PowerShell@2
-  inputs:
-    targetType: 'inline'
-    script: |
-      echo "Listing files in the staging directory:"
-      Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)" -Recurse
-  displayName: 'List Files in Staging Directory'
+      echo "Listing files in the global npm directory:"
+      Get-ChildItem -Path "C:\Program Files\nodejs\node_modules\npm\node_modules" -Recurse
+  displayName: 'List Files in Global npm Directory'
 
 - task: PowerShell@2
   inputs:
@@ -88,13 +60,13 @@ steps:
       $ErrorActionPreference = 'Stop'
       $newmanPath = 'newman'
       if (Get-Command $newmanPath -ErrorAction SilentlyContinue) {
-        & $newmanPath run $(Build.SourcesDirectory)\callback\HappyPatchCallback.json -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
-        & $newmanPath run $(Build.SourcesDirectory)\callback\Callback_respuestas_200.json -d $(Build.ArtifactStagingDirectory)\Respuestas_200.csv -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
-        & $newmanPath run $(Build.SourcesDirectory)\callback\Callback_repuestas_401.json -d $(Build.ArtifactStagingDirectory)\Respuestas_401.csv -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
-        & $newmanPath run $(Build.SourcesDirectory)\callback\Callback_respuestas_400.json -d $(Build.ArtifactStagingDirectory)\Respuestas_400.csv -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
-        & $newmanPath run $(Build.SourcesDirectory)\callback\Callback_no_enviar_campos.json -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
-        & $newmanPath run $(Build.SourcesDirectory)\callback\CallbackError_500.json -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
-        & $newmanPath run $(Build.SourcesDirectory)\callback\CambioFormatoTxt.json -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
+        & $newmanPath run "$(Build.SourcesDirectory)\callback\HappyPatchCallback.json" -g "$(Build.ArtifactStagingDirectory)\globals.json" -r allure --insecure
+        & $newmanPath run "$(Build.SourcesDirectory)\callback\Callback_respuestas_200.json" -d "$(Build.ArtifactStagingDirectory)\Respuestas_200.csv" -g "$(Build.ArtifactStagingDirectory)\globals.json" -r allure --insecure
+        & $newmanPath run "$(Build.SourcesDirectory)\callback\Callback_repuestas_401.json" -d "$(Build.ArtifactStagingDirectory)\Respuestas_401.csv" -g "$(Build.ArtifactStagingDirectory)\globals.json" -r allure --insecure
+        & $newmanPath run "$(Build.SourcesDirectory)\callback\Callback_respuestas_400.json" -d "$(Build.ArtifactStagingDirectory)\Respuestas_400.csv" -g "$(Build.ArtifactStagingDirectory)\globals.json" -r allure --insecure
+        & $newmanPath run "$(Build.SourcesDirectory)\callback\Callback_no_enviar_campos.json" -g "$(Build.ArtifactStagingDirectory)\globals.json" -r allure --insecure
+        & $newmanPath run "$(Build.SourcesDirectory)\callback\CallbackError_500.json" -g "$(Build.ArtifactStagingDirectory)\globals.json" -r allure --insecure
+        & $newmanPath run "$(Build.SourcesDirectory)\callback\CambioFormatoTxt.json" -g "$(Build.ArtifactStagingDirectory)\globals.json" -r allure --insecure
       } else {
         Write-Error "Newman not found. Make sure it's installed correctly."
       }
