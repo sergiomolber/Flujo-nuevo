@@ -8,6 +8,16 @@ steps:
 - checkout: self
   displayName: 'Checkout repository'
 
+- task: NodeTool@0
+  inputs:
+    versionSpec: '16.x'
+  displayName: 'Install Node.js 16.x'
+
+- script: |
+    npm install -g newman
+    npm install -g allure-commandline
+  displayName: 'Install Newman and Allure'
+
 - task: PowerShell@2
   inputs:
     targetType: 'inline'
@@ -75,10 +85,8 @@ steps:
     targetType: 'inline'
     script: |
       $ErrorActionPreference = 'Stop'
-      $newmanPath = 'C:\\Users\\sergiomolina\\AppData\\Roaming\\npm\\newman'
-      $allurePath = 'C:\\Users\\sergiomolina\\AppData\\Roaming\\npm\\allure'
-
-      if (Test-Path $newmanPath) {
+      $newmanPath = 'newman'
+      if (Get-Command $newmanPath -ErrorAction SilentlyContinue) {
         & $newmanPath run $(Build.SourcesDirectory)\callback\HappyPatchCallback.json -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
         & $newmanPath run $(Build.SourcesDirectory)\callback\Callback_respuestas_200.json -d $(Build.ArtifactStagingDirectory)\Respuestas_200.csv -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
         & $newmanPath run $(Build.SourcesDirectory)\callback\Callback_repuestas_401.json -d $(Build.ArtifactStagingDirectory)\Respuestas_401.csv -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
@@ -87,12 +95,12 @@ steps:
         & $newmanPath run $(Build.SourcesDirectory)\callback\CallbackError_500.json -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
         & $newmanPath run $(Build.SourcesDirectory)\callback\CambioFormatoTxt.json -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
       } else {
-        Write-Error "Newman not found at path $newmanPath. Make sure it's installed correctly."
+        Write-Error "Newman not found. Make sure it's installed correctly."
       }
   displayName: 'Run Newman Tests'
 
 - script: |
-    C:\\Users\\sergiomolina\\AppData\\Roaming\\npm\\allure generate --single-file callback\allure-results --clean -o callback\allure-report
+    allure generate --single-file callback\allure-results --clean -o callback\allure-report
     ren callback\allure-report\index.html callback_report.html
   displayName: 'Create Callback Report'
 
