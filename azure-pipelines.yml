@@ -23,27 +23,13 @@ steps:
     echo {\"name\":\"Callback\",\"type\":\"jenkins\",\"reportName\":\"Allure Report\"} > callback\allure-results\executor.json
   displayName: 'Setup Callback'
 
-- script: |
-    mkdir management\allure-results
-    echo {\"name\":\"Management\",\"type\":\"jenkins\",\"reportName\":\"Allure Report\"} > management\allure-results\executor.json
-  displayName: 'Setup Management'
 
-- script: |
-    mkdir anulacion\allure-results
-    echo {\"name\":\"Anulacion\",\"type\":\"jenkins\",\"reportName\":\"Allure Report\"} > anulacion\allure-results\executor.json
-  displayName: 'Setup Anulacion'
+
 
 - script: |
     echo {\"Operating System\":\"Windows\",\"IDE\":\"Newman y Postman\",\"Environment\":\"CALLBACK\"} > callback\allure-results\environment.json
   displayName: 'Create Environment File Callback'
 
-- script: |
-    echo {\"Operating System\":\"Windows\",\"IDE\":\"Newman y Postman\",\"Environment\":\"MANAGEMENT\"} > management\allure-results\environment.json
-  displayName: 'Create Environment File Management'
-
-- script: |
-    echo {\"Operating System\":\"Windows\",\"IDE\":\"Newman y Postman\",\"Environment\":\"ANULACION\"} > anulacion\allure-results\environment.json
-  displayName: 'Create Environment File Anulacion'
 
 - task: PowerShell@2
   inputs:
@@ -81,49 +67,7 @@ steps:
         Write-Error "Respuestas_400.csv not found in $(Build.SourcesDirectory)\callback"
       }
 
-      # Validating and copying files from management folder
-      if (Test-Path "$(Build.SourcesDirectory)\management\globals.json") {
-        Copy-Item -Path "$(Build.SourcesDirectory)\management\globals.json" -Destination "$(Build.ArtifactStagingDirectory)"
-      } else {
-        Write-Error "globals.json not found in $(Build.SourcesDirectory)\management"
-      }
-      if (Test-Path "$(Build.SourcesDirectory)\management\Respuestas_200.csv") {
-        Copy-Item -Path "$(Build.SourcesDirectory)\management\Respuestas_200.csv" -Destination "$(Build.ArtifactStagingDirectory)"
-      } else {
-        Write-Error "Respuestas_200.csv not found in $(Build.SourcesDirectory)\management"
-      }
-      if (Test-Path "$(Build.SourcesDirectory)\management\Respuestas_401.csv") {
-        Copy-Item -Path "$(Build.SourcesDirectory)\management\Respuestas_401.csv" -Destination "$(Build.ArtifactStagingDirectory)"
-      } else {
-        Write-Error "Respuestas_401.csv not found in $(Build.SourcesDirectory)\management"
-      }
-      if (Test-Path "$(Build.SourcesDirectory)\management\Respuestas_400.csv") {
-        Copy-Item -Path "$(Build.SourcesDirectory)\management\Respuestas_400.csv" -Destination "$(Build.ArtifactStagingDirectory)"
-      } else {
-        Write-Error "Respuestas_400.csv not found in $(Build.SourcesDirectory)\management"
-      }
-
-      # Validating and copying files from anulacion folder
-      if (Test-Path "$(Build.SourcesDirectory)\anulacion\globals.json") {
-        Copy-Item -Path "$(Build.SourcesDirectory)\anulacion\globals.json" -Destination "$(Build.ArtifactStagingDirectory)"
-      } else {
-        Write-Error "globals.json not found in $(Build.SourcesDirectory)\anulacion"
-      }
-      if (Test-Path "$(Build.SourcesDirectory)\anulacion\Respuestas_200.csv") {
-        Copy-Item -Path "$(Build.SourcesDirectory)\anulacion\Respuestas_200.csv" -Destination "$(Build.ArtifactStagingDirectory)"
-      } else {
-        Write-Error "Respuestas_200.csv not found in $(Build.SourcesDirectory)\anulacion"
-      }
-      if (Test-Path "$(Build.SourcesDirectory)\anulacion\Respuestas_401.csv") {
-        Copy-Item -Path "$(Build.SourcesDirectory)\anulacion\Respuestas_401.csv" -Destination "$(Build.ArtifactStagingDirectory)"
-      } else {
-        Write-Error "Respuestas_401.csv not found in $(Build.SourcesDirectory)\anulacion"
-      }
-      if (Test-Path "$(Build.SourcesDirectory)\anulacion\Respuestas_400.csv") {
-        Copy-Item -Path "$(Build.SourcesDirectory)\anulacion\Respuestas_400.csv" -Destination "$(Build.ArtifactStagingDirectory)"
-      } else {
-        Write-Error "Respuestas_400.csv not found in $(Build.SourcesDirectory)\anulacion"
-      }
+      
   displayName: 'Copy required files to staging directory'
 
 - task: PowerShell@2
@@ -155,67 +99,18 @@ steps:
       }
   displayName: 'Run'
 
-- task: PowerShell@2
-  inputs:
-    targetType: 'inline'
-    script: |
-      $ErrorActionPreference = 'Stop'
-      $newmanPath = 'newman'
-      if (Get-Command $newmanPath -ErrorAction SilentlyContinue) {
-        & $newmanPath run $(Build.SourcesDirectory)\management\HappyPatchManagement.json -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
-        & $newmanPath run $(Build.SourcesDirectory)\management\Management_respuestas_200.json -d $(Build.ArtifactStagingDirectory)\Respuestas_200.csv -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
-        & $newmanPath run $(Build.SourcesDirectory)\management\Management_respuestas_401.json -d $(Build.ArtifactStagingDirectory)\Respuestas_401.csv -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
-        & $newmanPath run $(Build.SourcesDirectory)\management\Management_respuestas_400.json -d $(Build.ArtifactStagingDirectory)\Respuestas_400.csv -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
-        & $newmanPath run $(Build.SourcesDirectory)\management\Management_no_enviar_campos.json -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
-        & $newmanPath run $(Build.SourcesDirectory)\management\ManagementError_500.json -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
-        & $newmanPath run $(Build.SourcesDirectory)\management\CambioFormatoTxt.json -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
-      } else {
-        Write-Error "Newman not found. Make sure it's installed correctly."
-      }
-  displayName: 'Run Newman Tests Management'
-
-- task: PowerShell@2
-  inputs:
-    targetType: 'inline'
-    script: |
-      $ErrorActionPreference = 'Stop'
-      $newmanPath = 'newman'
-      if (Get-Command $newmanPath -ErrorAction SilentlyContinue) {
-        & $newmanPath run $(Build.SourcesDirectory)\anulacion\HappyPatchAnulacion.json -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
-        & $newmanPath run $(Build.SourcesDirectory)\anulacion\Anulacion_respuestas_200.json -d $(Build.ArtifactStagingDirectory)\Respuestas_200.csv -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
-        & $newmanPath run $(Build.SourcesDirectory)\anulacion\Anulacion_respuestas_401.json -d $(Build.ArtifactStagingDirectory)\Respuestas_401.csv -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
-        & $newmanPath run $(Build.SourcesDirectory)\anulacion\Anulacion_respuestas_400.json -d $(Build.ArtifactStagingDirectory)\Respuestas_400.csv -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
-        & $newmanPath run $(Build.SourcesDirectory)\anulacion\Anulacion_no_enviar_campos.json -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
-        & $newmanPath run $(Build.SourcesDirectory)\anulacion\AnulacionError_500.json -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
-        & $newmanPath run $(Build.SourcesDirectory)\anulacion\CambioFormatoTxt.json -g $(Build.ArtifactStagingDirectory)\globals.json -r allure --insecure
-      } else {
-        Write-Error "Newman not found. Make sure it's installed correctly."
-      }
-  displayName: 'Run Newman Tests Anulacion'
-
-
 - script: |
     allure generate --single-file callback\allure-results --clean -o callback\allure-report
     ren callback\allure-report\index.html callback_report.html
   displayName: 'Create Callback Report'
 
-- script: |
-    allure generate --single-file management\allure-results --clean -o management\allure-report
-    ren management\allure-report\index.html management_report.html
-  displayName: 'Create Management Report'
 
-- script: |
-    allure generate --single-file anulacion\allure-results --clean -o anulacion\allure-report
-    ren anulacion\allure-report\index.html anulacion_report.html
-  displayName: 'Create Anulacion Report'
 
 - script: |
     rmdir /S /Q AllureReports
     del AllureReports.zip
     mkdir AllureReports
     copy callback\allure-report\callback_report.html AllureReports\callback_report.html
-    copy management\allure-report\management_report.html AllureReports\management_report.html
-    copy anulacion\allure-report\anulacion_report.html AllureReports\anulacion_report.html
     powershell Compress-Archive -Path AllureReports\* -DestinationPath AllureReports.zip
   displayName: 'Zip Reports'
 
