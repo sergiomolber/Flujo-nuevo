@@ -49,9 +49,46 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      echo "Listing files in the global npm directory:"
-      Get-ChildItem -Path "C:\Program Files\nodejs\node_modules\npm\node_modules" -Recurse
-  displayName: 'List Files in Global npm Directory'
+      echo "Listing files in the artifact staging directory:"
+      Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)" -Recurse
+  displayName: 'List Files in Staging Directory'
+
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      $ErrorActionPreference = 'Stop'
+      
+      # Validating and copying files from callback folder
+      if (Test-Path "$(Build.SourcesDirectory)\callback\globals.json") {
+        Copy-Item -Path "$(Build.SourcesDirectory)\callback\globals.json" -Destination "$(Build.ArtifactStagingDirectory)"
+      } else {
+        Write-Error "globals.json not found in $(Build.SourcesDirectory)\callback"
+      }
+      if (Test-Path "$(Build.SourcesDirectory)\callback\Respuestas_200.csv") {
+        Copy-Item -Path "$(Build.SourcesDirectory)\callback\Respuestas_200.csv" -Destination "$(Build.ArtifactStagingDirectory)"
+      } else {
+        Write-Error "Respuestas_200.csv not found in $(Build.SourcesDirectory)\callback"
+      }
+      if (Test-Path "$(Build.SourcesDirectory)\callback\Respuestas_401.csv") {
+        Copy-Item -Path "$(Build.SourcesDirectory)\callback\Respuestas_401.csv" -Destination "$(Build.ArtifactStagingDirectory)"
+      } else {
+        Write-Error "Respuestas_401.csv not found in $(Build.SourcesDirectory)\callback"
+      }
+      if (Test-Path "$(Build.SourcesDirectory)\callback\Respuestas_400.csv") {
+        Copy-Item -Path "$(Build.SourcesDirectory)\callback\Respuestas_400.csv" -Destination "$(Build.ArtifactStagingDirectory)"
+      } else {
+        Write-Error "Respuestas_400.csv not found in $(Build.SourcesDirectory)\callback"
+      }
+  displayName: 'Copy required files to staging directory'
+
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      echo "Listing files in the staging directory:"
+      Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)" -Recurse
+  displayName: 'List Files in Staging Directory'
 
 - task: PowerShell@2
   inputs:
