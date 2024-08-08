@@ -14,12 +14,16 @@ steps:
   displayName: 'Install Node.js 16.x'
 
 - script: |
-    npm install -g newman
-    npm install -g allure-commandline --save-dev
+    npm install -g newman@latest
+    npm install -g newman-reporter-allure@latest
+    npm install -g allure-commandline@latest
     npm install uuid@latest
     npm audit fix --force
   displayName: 'Install Newman, Allure, and Update Dependencies'
-
+  
+- script: |
+    npm list -g --depth=0
+  displayName: 'List Global NPM Packages'
 - script: |
     newman --version
   displayName: 'Check Newman Version'
