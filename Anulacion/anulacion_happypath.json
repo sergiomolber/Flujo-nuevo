@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "cca8168b-6357-4be1-8b72-b3445c919b90",
-		"name": "anulacion happypath",
+		"_postman_id": "a7128f45-601a-4838-a79e-bfb0ca77faf2",
+		"name": "anulacion happypath Copy",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "29460625",
-		"_collection_link": "https://red-satellite-829132.postman.co/workspace/REVSION~ba7964fb-204b-4948-bcbe-87d38bf9cfbc/collection/29460625-cca8168b-6357-4be1-8b72-b3445c919b90?action=share&source=collection_link&creator=29460625"
+		"_collection_link": "https://red-satellite-829132.postman.co/workspace/anulacion~56bc220a-7b29-48ca-a4d2-044b53ce19a9/collection/29460625-a7128f45-601a-4838-a79e-bfb0ca77faf2?action=share&source=collection_link&creator=29460625"
 	},
 	"item": [
 		{
@@ -501,7 +501,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n\"transferId\": \"{{transferId}}\",\r\n    \"tx_id\": \"{{txRef}}\",\r\n    \"status\": \"REJECTED\",\r\n    \"type\": \"REQUEST\",\r\n    \"created\": \"2023-11-09T11:56:10-05:00\",\r\n    \"updated\": \"2023-11-09T11:56:23-05:00\",\r\n    \"amount\": \"100.00\",\r\n    \"symbol\": \"$tin\",\r\n    \"errorCode\": \"1013\",\r\n   \"errorDesc\": \"Some Desc\"\r\n}",
+					"raw": "{\r\n\"transferId\": \"{{transferId}}\",\r\n    \"tx_id\": \"{{txRef}}\",\r\n    \"status\": \"REJECTED\",\r\n    \"type\": \"REQUEST\",\r\n    \"created\": \"2023-11-09T11:56:10-05:00\",\r\n    \"updated\": \"2023-11-09T11:56:23-05:00\",\r\n    \"amount\": \"100.00\",\r\n    \"symbol\": \"$tin\"\r\n    \r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
