@@ -1,0 +1,153 @@
+trigger:
+- main
+
+pool:
+  vmImage: 'windows-latest'
+
+steps:
+- checkout: self
+  displayName: 'Checkout repository'
+
+- task: NodeTool@0
+  inputs:
+    versionSpec: '16.x'
+  displayName: 'Install Node.js 16.x'
+
+- script: |
+    npm install -g newman@latest
+    npm install -g newman-reporter-allure@latest
+    npm install -g allure-commandline@latest
+    npm install uuid@latest
+    npm audit fix --force
+  displayName: 'Install Newman, Allure, and Update Dependencies'
+
+
+- script: |
+    newman --version
+  displayName: 'Check Newman Version'
+  
+- script: |
+    npm list -g --depth=0 | findstr newman-reporter-allure
+  displayName: 'Check Allure Reporter Installation'
+  # Verificar que el reporter Allure esté instalado
+- script: |
+    npm list -g --depth=0 | findstr newman-reporter-allure
+  displayName: 'Check Allure Reporter Installation'
+  failOnStderr: true
+
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      echo "Listing files in the sources directory after checkout:"
+      Get-ChildItem -Path "$(Build.SourcesDirectory)" -Recurse
+  displayName: 'List Files in Sources Directory After Checkout'
+
+- script: |
+    mkdir callback\allure-results
+    echo {\"name\":\"Callback\",\"type\":\"jenkins\",\"reportName\":\"Allure Report\"} > callback\allure-results\executor.json
+  displayName: 'Setup Callback'
+
+- script: |
+    echo {\"Operating System\":\"Windows\",\"IDE\":\"Newman y Postman\",\"Environment\":\"CALLBACK\"} > callback\allure-results\environment.json
+  displayName: 'Create Environment File Callback'
+
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      echo "Listing files in the sources directory after setup:"
+      Get-ChildItem -Path "$(Build.SourcesDirectory)" -Recurse
+  displayName: 'List Files in Sources Directory After Setup'
+
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      echo "Listing files in the artifact staging directory:"
+      Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)" -Recurse
+  displayName: 'List Files in Staging Directory'
+
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      $ErrorActionPreference = 'Stop'
+      
+      # Validating and copying files from callback folder
+      if (Test-Path "$(Build.SourcesDirectory)\callback\globals.json") {
+        Copy-Item -Path "$(Build.SourcesDirectory)\callback\globals.json" -Destination "$(Build.ArtifactStagingDirectory)"
+      } else {
+        Write-Error "globals.json not found in $(Build.SourcesDirectory)\callback"
+      }
+      if (Test-Path "$(Build.SourcesDirectory)\callback\Respuestas_200.csv") {
+        Copy-Item -Path "$(Build.SourcesDirectory)\callback\Respuestas_200.csv" -Destination "$(Build.ArtifactStagingDirectory)"
+      } else {
+        Write-Error "Respuestas_200.csv not found in $(Build.SourcesDirectory)\callback"
+      }
+      if (Test-Path "$(Build.SourcesDirectory)\callback\Respuestas_401.csv") {
+        Copy-Item -Path "$(Build.SourcesDirectory)\callback\Respuestas_401.csv" -Destination "$(Build.ArtifactStagingDirectory)"
+      } else {
+        Write-Error "Respuestas_401.csv not found in $(Build.SourcesDirectory)\callback"
+      }
+      if (Test-Path "$(Build.SourcesDirectory)\callback\Respuestas_400.csv") {
+        Copy-Item -Path "$(Build.SourcesDirectory)\callback\Respuestas_400.csv" -Destination "$(Build.ArtifactStagingDirectory)"
+      } else {
+        Write-Error "Respuestas_400.csv not found in $(Build.SourcesDirectory)\callback"
+      }
+  displayName: 'Copy required files to staging directory'
+
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      echo "Listing files in the staging directory:"
+      Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)" -Recurse
+  displayName: 'List Files in Staging Directory'
+
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      $ErrorActionPreference = 'Stop'
+      $newmanPath = 'newman'
+      if (Get-Command $newmanPath -ErrorAction SilentlyContinue) {
+        & $newmanPath run "$(Build.SourcesDirectory)\callback\HappyPatchCallback.json" -g "$(Build.ArtifactStagingDirectory)\globals.json" -r allure --insecure
+        & $newmanPath run "$(Build.SourcesDirectory)\callback\Callback_respuestas_200.json" -d "$(Build.ArtifactStagingDirectory)\Respuestas_200.csv" -g "$(Build.ArtifactStagingDirectory)\globals.json" -r allure --insecure
+        & $newmanPath run "$(Build.SourcesDirectory)\callback\Callback_repuestas_401.json" -d "$(Build.ArtifactStagingDirectory)\Respuestas_401.csv" -g "$(Build.ArtifactStagingDirectory)\globals.json" -r allure --insecure
+        & $newmanPath run "$(Build.SourcesDirectory)\callback\Callback_respuestas_400.json" -d "$(Build.ArtifactStagingDirectory)\Respuestas_400.csv" -g "$(Build.ArtifactStagingDirectory)\globals.json" -r allure --insecure
+        & $newmanPath run "$(Build.SourcesDirectory)\callback\Callback_no_enviar_campos.json" -g "$(Build.ArtifactStagingDirectory)\globals.json" -r allure --insecure
+        & $newmanPath run "$(Build.SourcesDirectory)\callback\CallbackError_500.json" -g "$(Build.ArtifactStagingDirectory)\globals.json" -r allure --insecure
+        & $newmanPath run "$(Build.SourcesDirectory)\callback\CambioFormatoTxt.json" -g "$(Build.ArtifactStagingDirectory)\globals.json" -r allure --insecure
+      } else {
+        Write-Error "Newman not found. Make sure it's installed correctly."
+      }
+  displayName: 'Run Newman Tests'
+
+- script: |
+    allure generate --single-file callback\allure-results --clean -o callback\allure-report
+    ren callback\allure-report\index.html callback_report.html
+  displayName: 'Create Callback Report'
+
+- script: |
+    rmdir /S /Q AllureReports
+    del AllureReports.zip
+    mkdir AllureReports
+    copy callback\allure-report\callback_report.html AllureReports\callback_report.html
+    powershell Compress-Archive -Path AllureReports\* -DestinationPath AllureReports.zip
+  displayName: 'Zip Reports'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)\AllureReports.zip'
+    ArtifactName: 'AllureReports'
+  displayName: 'Publish Allure Reports'
+
+- task: SendEmail@1
+  inputs:
+    subject: 'Resultado Microservicios Automatización Pago presente: flujo de fallos, anulación'
+    body: 'Resultados de la ejecución del lanzamiento de los microservicios de transfiya'
+    to: 'molinabernal@gmail.com'
+    from: 'achjenkinsnewman@gmail.com'
+    attachments: '$(Build.ArtifactStagingDirectory)\AllureReports.zip'
+  displayName: 'Send Email with Allure Reports'
